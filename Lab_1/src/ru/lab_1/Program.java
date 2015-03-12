@@ -2,6 +2,8 @@ package ru.lab_1;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,15 +51,26 @@ public class Program {
 	}
 
 	public void task4(double capital) {
-		double money = capital;
+		double money = capital, stock = 0;
 		System.out.println("Период\tЦена\tДеньги\tАкции\tКапитал");
 		for (int i = 0; i < 40; i++)
 			System.out.print("-");
 		System.out.println();
-		
+
 		int a[] = trend();
 		for (int i = 0; i < a.length; i++) {
-			System.out.println(i + 1+"\t" + listOfNumber.get(i) + "\t" + money + "\tАкции\tКапитал");
+			if (a[i] == 1) {
+				stock = money / listOfNumber.get(i);
+				money = 0;
+			}
+			if (a[i] == -1) {
+				money = stock * listOfNumber.get(i);
+				stock = 0;
+			}
+			capital = money + stock * listOfNumber.get(i);
+			System.out.println(i + 1 + "\t" + round(listOfNumber.get(i), 3)
+					+ "\t" + round(money, 2) + "\t" + round(stock, 2) + "\t"
+					+ round(capital, 2));
 		}
 	}
 
@@ -87,5 +100,9 @@ public class Program {
 			System.out.print("*");
 		}
 		System.out.println();
+	}
+
+	private double round(double d, int r) {
+		return new BigDecimal(d).setScale(r, RoundingMode.UP).doubleValue();
 	}
 }
