@@ -59,11 +59,11 @@ public class Program {
 
 		int a[] = trend();
 		for (int i = 0; i < a.length; i++) {
-			if (a[i] == 1) {
+			if (a[i] == 1 && money != 0) {
 				stock = money / listOfNumber.get(i);
 				money = 0;
 			}
-			if (a[i] == -1) {
+			if (a[i] == -1 && stock != 0) {
 				money = stock * listOfNumber.get(i);
 				stock = 0;
 			}
@@ -75,14 +75,23 @@ public class Program {
 	}
 
 	private int[] trend() {
-		int a[] = new int[listOfNumber.size()];
-		int up = 0, down = 0;
+		int up = 0, down = 0, n = listOfNumber.size();
+		int a[] = new int[n];
+		String previous = null;
 
-		for (int i = 1; i < listOfNumber.size(); i++) {
-			if (listOfNumber.get(i) > listOfNumber.get(i - 1))
+		for (int i = 1; i < n; i++) {
+			double cur = listOfNumber.get(i), prev = listOfNumber.get(i - 1);
+			String current = null;
+			if (cur > prev) {
 				up++;
-			if (listOfNumber.get(i) < listOfNumber.get(i - 1))
+				current = new String("up");
+			}
+			else if (cur < prev) {
 				down++;
+				current = new String("down");
+			}
+			else 
+				continue;
 			if (up >= 3 && down == 1) {
 				up = 0;
 				a[i] = -1;
@@ -91,6 +100,13 @@ public class Program {
 				down = 0;
 				a[i] = 1;
 			}
+			if (!current.equals(previous) && previous != null) {
+				if (current.equals("down"))
+					up = 0;
+				if (current.equals("up"))
+					down = 0;
+			}
+			previous = new String(current);
 		}
 		return a;
 	}
