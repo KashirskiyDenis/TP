@@ -52,7 +52,7 @@ public class Program {
 
 	public void task4(double capital) {
 		double money = capital, stock = 0;
-		System.out.println("Период\tЦена\tДеньги\tАкции\tКапитал");
+		System.out.println("ГЏГҐГ°ГЁГ®Г¤\tГ–ГҐГ­Г \tГ„ГҐГ­ГјГЈГЁ\tГЂГЄГ¶ГЁГЁ\tГЉГ ГЇГЁГІГ Г«");
 		for (int i = 0; i < 40; i++)
 			System.out.print("-");
 		System.out.println();
@@ -90,8 +90,12 @@ public class Program {
 				down++;
 				current = new String("down");
 			}
-			else 
+			else {
+				previous = null;
+				down = 0;
+				up = 0;
 				continue;
+			}
 			if (up >= 3 && down == 1) {
 				up = 0;
 				a[i] = -1;
