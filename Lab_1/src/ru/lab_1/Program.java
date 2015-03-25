@@ -52,7 +52,7 @@ public class Program {
 
 	public void task4(double capital) {
 		double money = capital, stock = 0;
-		System.out.println("ГЏГҐГ°ГЁГ®Г¤\tГ–ГҐГ­Г \tГ„ГҐГ­ГјГЈГЁ\tГЂГЄГ¶ГЁГЁ\tГЉГ ГЇГЁГІГ Г«");
+		System.out.println("Период\tЦена\tДеньги\tАкции\tКапитал");
 		for (int i = 0; i < 40; i++)
 			System.out.print("-");
 		System.out.println();
