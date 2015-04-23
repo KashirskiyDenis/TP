@@ -1,8 +1,11 @@
-package ru.lab_4;
+package ru.lab_4.tests;
 
 import static org.junit.Assert.*;
 
 import org.junit.*;
+
+import ru.lab_4.LackOfFundsException;
+import ru.lab_4.Wallet;
 
 public class WalletTest {
 
@@ -12,9 +15,14 @@ public class WalletTest {
 	public void init() {
 		wallet = new Wallet();
 		wallet.addMoney("RUB", 500);
-		wallet.addMoney("USD", 0);
+		wallet.addMoney("USD", 50);
 	}
-
+	
+	@After
+	public void testFinalize(){
+		wallet.finalize();
+	}
+	
 	@Test
 	public void testAddMoney() {
 		assertEquals(500, wallet.getMoney("RUB"));
@@ -24,6 +32,15 @@ public class WalletTest {
 	public void testRemoveMoney() throws LackOfFundsException {
 		wallet.removeMoney("RUB", 550);
 	}
+	
+	@Test
+	public void testRemoveMoney2() {
+		try {
+			wallet.removeMoney("RUB", 500);
+		} catch (LackOfFundsException e) {
+			System.out.println(e.getMessage());
+		}
+	}
 
 	@Test
 	public void testGetMoney() {
@@ -32,16 +49,22 @@ public class WalletTest {
 
 	@Test
 	public void testGetMoney2() {
-		assertEquals(0, wallet.getMoney("USD"));
+		assertEquals(50, wallet.getMoney("USD"));
 	}
 
 	@Test
 	public void TtestGetCountCurrency() {
-		assertEquals(1, wallet.getCountCurrency());
+		assertEquals(2, wallet.getCountCurrency());
 	}
 
 	@Test
 	public void testToString() {
-		assertEquals("{ 0 USD, 500 RUB }", wallet.toString());
+		assertEquals("{ 50 USD, 500 RUB }", wallet.toString());
 	}
+	
+	@Test
+	public void testGetTotalMoney(){
+		assertEquals(59, wallet.getTotalMoney("USD"));
+	}
+
 }

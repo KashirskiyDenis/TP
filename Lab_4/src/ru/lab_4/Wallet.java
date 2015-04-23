@@ -6,9 +6,15 @@ import java.util.Map.Entry;
 public class Wallet {
 
 	private HashMap<String, Integer> wallet;
+	private MoneyLagger moneyLogger;
 
 	public Wallet() {
 		wallet = new HashMap<String, Integer>();
+		moneyLogger = new MoneyLagger();
+	}
+
+	public void finalize() {
+		moneyLogger.commit();
 	}
 
 	public void addMoney(String currency, int money) {
@@ -17,6 +23,7 @@ public class Wallet {
 			wallet.put(currency, 0);
 		int newCash = wallet.get(currency) + money;
 		wallet.replace(currency, newCash);
+		moneyLogger.log("В кошелёк добавлено " + money + " " + currency);
 	}
 
 	public void removeMoney(String currency, int money)
@@ -26,6 +33,7 @@ public class Wallet {
 			throw new LackOfFundsException();
 		int newCash = wallet.get(currency) - money;
 		wallet.replace(currency, newCash);
+		moneyLogger.log("Из кошелёка всято " + money + " " + currency);
 	}
 
 	public int getMoney(String currency) {
@@ -53,5 +61,18 @@ public class Wallet {
 		
 		str = str.substring(0, str.length() - 2) + " }";
 		return str;
+	}
+
+	public int getTotalMoney(String currency) {
+		currency = currency.toUpperCase();
+		int sum = 0;
+		for (Entry<String, Integer> entry : wallet.entrySet()) {
+			if (!currency.equalsIgnoreCase(entry.getKey())) {
+				sum += (int) entry.getValue() / 51.86;
+			}
+			else
+				sum += entry.getValue();
+		}
+		return sum;
 	}
 }
