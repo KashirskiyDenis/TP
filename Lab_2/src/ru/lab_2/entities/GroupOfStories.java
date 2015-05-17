@@ -7,6 +7,10 @@ public class GroupOfStories {
 
 	List<Story> group = new ArrayList<Story>();
 
+	public List<Story> getGroup() {
+		return group;
+	}
+
 	public void add(Story story) {
 		this.group.add(story);
 	}

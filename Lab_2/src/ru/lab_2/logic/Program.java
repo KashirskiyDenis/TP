@@ -15,7 +15,7 @@ public class Program {
 
 	public Program() {
 		readFile();
-		grouping();
+		createMatrixA();
 		print();
 	}
 
@@ -41,36 +41,6 @@ public class Program {
 		}
 	}
 
-	public void grouping() {
-		int speed = this.speed;
-		GroupOfStories group = new GroupOfStories();
-
-		while (listOfStories.size() != 0) {
-			int max = Integer.MIN_VALUE;
-			int index = 0;
-			for (int i = 0; i < listOfStories.size(); i++) {
-				int cur = listOfStories.get(i).getComplexity();
-				if (cur > max && cur <= speed) {
-					max = cur;
-					index = i;
-				}
-			}
-
-			if (max != Integer.MIN_VALUE) {
-				group.add(listOfStories.get(index).copy());
-				listOfStories.remove(index);
-				speed -= max;
-			} else
-				speed = 0;
-
-			if (speed == 0 || listOfStories.size() == 0) {
-				speed = this.speed;
-				listOfGroups.add(group);
-				group = new GroupOfStories();
-			}
-		}
-	}
-
 	private void print() {
 		for (GroupOfStories g : listOfGroups) {
 			System.out.println("Итерация " + listOfGroups.indexOf(g));
@@ -78,4 +48,52 @@ public class Program {
 			g.print();
 		}
 	}
+
+	private void createMatrixA() {
+		while (listOfStories.size() != 0) {
+			int n = listOfStories.size();
+			int dp[][] = new int[speed + 1][n + 1];
+			for (int j = 1; j <= n; j++) {
+				for (int w = 1; w <= speed; w++) {
+					if (listOfStories.get(j - 1).getComplexity() <= w) {
+						dp[w][j] = Math
+								.max(dp[w][j - 1],
+										dp[w - listOfStories.get(j - 1).getComplexity()][j - 1]
+												+ listOfStories.get(j - 1).getComplexity());
+					} else {
+						dp[w][j] = dp[w][j - 1];
+					}
+				}
+			}
+			List<Integer> groupIndex = new ArrayList<Integer>();
+			findGroupIndex(groupIndex, dp, dp.length - 1, dp[0].length - 1);
+			updateLists(groupIndex, new GroupOfStories());
+		}
+	}
+	
+	private void findGroupIndex(List<Integer> groupIndex, int a[][], int n, int s) {
+		if (a[n][s] == 0)
+			return;
+		if (a[n][s - 1] == a[n][s])
+			findGroupIndex(groupIndex, a, n, s - 1);
+		else {
+			findGroupIndex(groupIndex, a, n - listOfStories.get(s - 1).getComplexity(), s - 1);
+			groupIndex.add(s - 1);
+		}
+	}
+	
+	private void updateLists(List<Integer> groupIndex, GroupOfStories group) {
+		for (int i : groupIndex) 
+			group.add(this.listOfStories.get(i).copy());
+
+		this.listOfGroups.add(group);
+
+		List<Story> listOfStories = new ArrayList<Story>();
+		for (int i = 0; i < this.listOfStories.size(); i++)
+			if (!groupIndex.contains(i))
+				listOfStories.add(this.listOfStories.get(i).copy());
+		
+		this.listOfStories = listOfStories;
+	}	
+
 }
