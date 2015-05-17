@@ -53,7 +53,7 @@ public class WalletTest {
 	}
 
 	@Test
-	public void TtestGetCountCurrency() {
+	public void testGetCountCurrency() {
 		assertEquals(2, wallet.getCountCurrency());
 	}
 
@@ -64,7 +64,7 @@ public class WalletTest {
 	
 	@Test
 	public void testGetTotalMoney(){
-		assertEquals(59, wallet.getTotalMoney("USD"));
+		assertEquals(66, wallet.getTotalMoney("USD"));
 	}
 
 }
