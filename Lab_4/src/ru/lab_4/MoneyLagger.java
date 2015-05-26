@@ -7,8 +7,12 @@ public class MoneyLagger {
 
 	private FileWriter fileWriter;
 
-	public MoneyLagger(String path) throws IOException {
-		fileWriter = new FileWriter(path, true);
+	public MoneyLagger() {
+		try {
+			fileWriter = new FileWriter("Log.txt", true);
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	public void log(String message) throws IOException {

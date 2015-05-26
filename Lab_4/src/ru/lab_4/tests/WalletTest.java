@@ -4,7 +4,9 @@ import static org.junit.Assert.*;
 
 import org.junit.*;
 
+import ru.lab_4.BankStub;
 import ru.lab_4.LackOfFundsException;
+import ru.lab_4.MoneyLaggerStub;
 import ru.lab_4.Wallet;
 
 public class WalletTest {
@@ -14,6 +16,8 @@ public class WalletTest {
 	@Before
 	public void init() {
 		wallet = new Wallet();
+		wallet.setMoneyLogger(new MoneyLaggerStub());
+		wallet.setBank(new BankStub());
 		wallet.addMoney("RUB", 500);
 		wallet.addMoney("USD", 50);
 	}

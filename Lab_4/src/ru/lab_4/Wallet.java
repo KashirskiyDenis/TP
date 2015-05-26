@@ -1,23 +1,41 @@
 package ru.lab_4;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 public class Wallet {
 
 	private HashMap<String, Integer> wallet;
-	// private MoneyLagger moneyLogger;
-	private MoneyLaggerStub mls;
-
+	private MoneyLagger moneyLogger;
+	private Bank bank;
+	
 	public Wallet() {
 		wallet = new HashMap<String, Integer>();
-		//moneyLogger = new MoneyLagger();
-		mls = new MoneyLaggerStub();
+	}
+	
+	public void finalize() {
+		try {
+			moneyLogger.commit();
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+	}	
+	
+	public MoneyLagger getMoneyLogger() {
+		return moneyLogger;
 	}
 
-	public void finalize() {
-		// moneyLogger.commit();
-		mls.commit();
+	public void setMoneyLogger(MoneyLagger moneyLogger) {
+		this.moneyLogger = moneyLogger;
+	}
+
+	public Bank getBank() {
+		return bank;
+	}
+
+	public void setBank(Bank bank) {
+		this.bank = bank;
 	}
 
 	public void addMoney(String currency, int money) {
@@ -26,8 +44,11 @@ public class Wallet {
 			wallet.put(currency, 0);
 		int newCash = wallet.get(currency) + money;
 		wallet.replace(currency, newCash);
-		// moneyLogger.log("В кошелёк добавлено " + money + " " + currency);
-		mls.log("В кошелёк добавлено " + money + " " + currency);
+		try {
+			moneyLogger.log("В кошелёк добавлено " + money + " " + currency);
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	public void removeMoney(String currency, int money)
@@ -37,8 +58,11 @@ public class Wallet {
 			throw new LackOfFundsException();
 		int newCash = wallet.get(currency) - money;
 		wallet.replace(currency, newCash);
-		// moneyLogger.log("Из кошелёка взято " + money + " " + currency);
-		mls.log("Из кошелёка взято " + money + " " + currency);
+		try {
+			moneyLogger.log("Из кошелёка взято " + money + " " + currency);
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	public int getMoney(String currency) {
@@ -69,15 +93,11 @@ public class Wallet {
 	}
 
 	public int getTotalMoney(String currency) {
-		//Bank bank = new Bank();
-		BankStub bank = new BankStub();
 		currency = currency.toUpperCase();
 		int sum = 0;
 		for (Entry<String, Integer> entry : wallet.entrySet()) {
-			if (!currency.equalsIgnoreCase(entry.getKey())) {
+			if (!currency.equalsIgnoreCase(entry.getKey()))
 				sum += bank.convert(entry.getValue(), entry.getKey(), currency);
-				// sum += (int) entry.getValue() / 51.86;
-			}
 			else
 				sum += entry.getValue();
 		}

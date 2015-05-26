@@ -1,11 +1,12 @@
 package ru.lab_4;
 
-public class MoneyLaggerStub {
+public class MoneyLaggerStub extends MoneyLagger {
 
-	String str;
-	String tmp = new String();
+	String str = new String();
+	String tmp= new String();
 	
-	public MoneyLaggerStub() { }
+	public MoneyLaggerStub() {
+	}
 	
 	public void log(String str) {
 		this.tmp += str = "\n";
